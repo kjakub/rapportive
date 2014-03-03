@@ -7,4 +7,8 @@ module Rapportive
     RapportiveApi.new.query(first_name,last_name,domain)
   end
 
+  class HttpError < StandardError
+
+  end
+
 end

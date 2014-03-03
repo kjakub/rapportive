@@ -36,13 +36,13 @@ module Rapportive
               break
             end
           else
-            raise email_response
+            raise Rapportive::HttpError, email_response.code
           end
         
         end
 
       else
-        raise login_response
+        raise Rapportive::HttpError, login_response.code
       end 
 
       return email_found
