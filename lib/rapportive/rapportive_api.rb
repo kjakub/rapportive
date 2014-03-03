@@ -19,7 +19,7 @@ module Rapportive
 
     def query(first_name, last_name, domain)
       
-      login_response = HTTParty.get('https://apportive.com/login_status?user_email=' + generate_email)
+      login_response = HTTParty.get('https://rapportive.com/login_status?user_email=' + generate_email)
      
       if login_response.success?
         session_token = login_response["session_token"]
