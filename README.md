@@ -1,6 +1,8 @@
 # Rapportive
 
-TODO: Write a gem description
+Use:
+
+Rapportive.lookup('jakub','kuchar','gmail.com')
 
 ## Installation
 
