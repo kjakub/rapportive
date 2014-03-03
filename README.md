@@ -1,8 +1,6 @@
 # Rapportive
 
-Use:
-
-Rapportive.lookup('jakub','kuchar','gmail.com')
+[![Build Status](https://travis-ci.org/kjakub/rapportive.png?branch=master)](https://travis-ci.org/kjakub/rapportive)
 
 ## Installation
 
@@ -20,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    Rapportive.lookup('jakub','kuchar','gmail.com')
 
 ## Contributing
 
