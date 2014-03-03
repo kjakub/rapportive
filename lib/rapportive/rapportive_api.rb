@@ -36,7 +36,7 @@ module Rapportive
               break
             end
           else
-            raise login_response
+            raise email_response
           end
         
         end
