@@ -18,7 +18,13 @@ Or install it yourself as:
 
 ## Usage
 
-    Rapportive.lookup('jakub','kuchar','gmail.com')
+    without predefined set of proxies: PROXY OFF
+
+      Rapportive.lookup('jakub','kuchar','gmail.com', false)
+
+    with predefined set of proxies: PROXY ON
+
+      Rapportive.lookup('jakub','kuchar','gmail.com', true)
 
 ## Contributing
 
