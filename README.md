@@ -17,14 +17,16 @@ Or install it yourself as:
     $ gem install rapportive
 
 ## Usage
+    
+    first name, last name, middle name are optional but at least one is required
 
     without predefined set of proxies: PROXY OFF
 
-      Rapportive.lookup('jakub','kuchar','gmail.com', false)
+      Rapportive.lookup('first_name','last_name', 'middle_name', 'gmail.com', false)
 
     with predefined set of proxies: PROXY ON
 
-      Rapportive.lookup('jakub','kuchar','gmail.com', true)
+      Rapportive.lookup('first_name','last_name', 'middle_name', true)
 
 ## Contributing
 
