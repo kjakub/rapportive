@@ -11,7 +11,8 @@ module Rapportive
       last_name.strip!
       middle_name.strip!
 
-      proxies = PROXIES
+      proxies = PROXIES.dup
+      
       begin
         proxy = proxies.first
         raise Rapportive::HttpError, '429 and no more proxy' if proxy.nil?
