@@ -17,16 +17,31 @@ Or install it yourself as:
     $ gem install rapportive
 
 ## Usage
-    
-    first name, last name, middle name are optional but at least one is required
 
-    without predefined set of proxies: PROXY OFF
+    1. set it up
 
-      Rapportive.lookup('first_name','last_name', 'middle_name', 'gmail.com', false)
+    Rapportive.configure do |config|
+      //choose one of those method
+      config.method = :single_proxy OR :multi_proxy OR :no_proxy
 
-    with predefined set of proxies: PROXY ON
+      // if you choose single_proxy set proxy
+      config.proxy = "proxy_ip:proxy_port" 
 
-      Rapportive.lookup('first_name','last_name', 'middle_name', true)
+      // if you choose multi_proxy some proxy list are provided in constants.rb
+      config.proxy_list = ["proxy_ip:proxy_port","proxy_ip:proxy_port"]
+      
+      // customize email templates or default is provided in constants.rb
+      config.email_templates = ["%{fn}", "%{ln}"]
+
+      //set timeout deafult is 20
+      config.timeout = 10
+    end
+
+    2. query
+
+    first name, last name, middle name - at least one is required
+
+      Rapportive.lookup('first_name','last_name', 'middle_name', 'gmail.com')
 
 ## Contributing
 

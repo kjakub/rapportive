@@ -38,7 +38,7 @@ module Rapportive
       self.proxy = nil
       self.proxy_list = PROXIES_LIST.dup
       self.email_templates = EMAIL_TEMPLATES.dup
-      self.timeout = 100
+      self.timeout = 20
       self
     end
   end
