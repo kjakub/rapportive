@@ -1,13 +1,26 @@
 require "rapportive/version"
 require "rapportive/rapportive_api.rb"
+require "rapportive/configuration"
 
 module Rapportive
+  
+  extend Configuration
 
   def self.lookup(first_name, last_name, middle_name, domain, proxy= false)
-    if proxy    
-      RapportiveApi.new.query_proxy(first_name, last_name, middle_name, domain)
+
+    first_name.strip!
+    last_name.strip!
+    middle_name.strip!
+    domain.strip!
+
+    if options[:method] == :multi_proxy  
+      RapportiveApi.new.query_multi_proxy(first_name, last_name, middle_name, domain, options)
+    elsif options[:method] == :single_proxy
+      RapportiveApi.new.query_single_proxy(first_name, last_name, middle_name, domain, options)
+    elsif options[:method] == :no_proxy
+      RapportiveApi.new.query_no_proxy(first_name, last_name, middle_name, domain, options)
     else
-      RapportiveApi.new.query_no_proxy(first_name, last_name, middle_name, domain)
+      raise 'unknown method did you set-up multi_proxy or single proxy or no proxy config?'
     end
 
   end

@@ -1,4 +1,4 @@
-TEMPLATES = [
+EMAIL_TEMPLATES = [
           '%{fn}',
           '%{ln}',
           '%{fn}%{ln}',
@@ -47,7 +47,7 @@ TEMPLATES = [
           '%{fn}_%{mn}_%{ln}',
 ];
 
-PROXIES = [
+PROXIES_LIST = [
           "220.162.237.125:81", 
           "202.187.160.140:3128", 
           "111.13.46.99:3128", 

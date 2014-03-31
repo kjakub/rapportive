@@ -1,18 +1,15 @@
 require 'httparty'
-require_relative 'constants'
 
 module Rapportive
 
   class RapportiveApi
  
-    def query_proxy(first_name= "", last_name= "", middle_name= "", domain)
+    def query_multi_proxy(first_name= "", last_name= "", middle_name= "", domain, options)
       
-      first_name.strip!
-      last_name.strip!
-      middle_name.strip!
+      puts 'multiproxy'
 
-      proxies = PROXIES.dup
-      
+      proxies = options[:proxy_list]
+
       begin
         proxy = proxies.first
         raise Rapportive::HttpError, '429 and no more proxy' if proxy.nil?
@@ -20,24 +17,35 @@ module Rapportive
         proxy_addr = proxy.split(':').first
         proxy_port = proxy.split(':').last
         response = execute_query(first_name, last_name, middle_name, domain, proxy_addr, proxy_port)
-      end while response.nil? || PROXIES.first.nil?
+      end while response.nil? || proxies.first.nil?
       
       return response || "Nothing found and no more proxy"
     
     end
 
-    def query_no_proxy(first_name= "", last_name= "", middle_name= "", domain)
+    def query_no_proxy(first_name= "", last_name= "", middle_name= "", domain, options)
       response = execute_query(first_name, last_name, middle_name, domain)
       return response || "Nothing found"
     end
 
+    def query_single_proxy(first_name= "", last_name= "", middle_name= "", domain, options)
+      proxy_addr = options[:proxy].split(':').first
+      proxy_port = options[:proxy].split(':').last
+      timeout = options[:timeout]
+      response = execute_query(first_name, last_name, middle_name, domain, proxy_addr, proxy_port)
+    end
+
 
   private
-    def execute_query(first_name, last_name, middle_name, domain, proxy_addr= nil, proxy_port= nil)
+    def execute_query(first_name, last_name, middle_name, domain, proxy_addr= nil, proxy_port= nil, timeout=20)
+      timeout = Rapportive.options[:timeout]
+
+      puts 'proxy in use:'+ proxy_addr+':'+proxy_port if (proxy_addr && proxy_port)
+      
       email_found = nil
 
       begin
-        login_response = HTTParty.get('https://rapportive.com/login_status?user_email=' + generate_email, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: 10)
+        login_response = HTTParty.get('https://rapportive.com/login_status?user_email=' + generate_email, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: timeout)
        
         if login_response.success?
           session_token = login_response["session_token"]
@@ -45,7 +53,8 @@ module Rapportive
           for template_email in stripped_templates(first_name, last_name, middle_name)
 
             target_email = template_email % { fn: first_name, ln: last_name, mn: middle_name, fi: first_name[0] || '', li: last_name[0] || '', mi: middle_name[0] || '' } + '@' + domain
-            email_response = HTTParty.get('https://profiles.rapportive.com/contacts/email/' + target_email, :headers => { "X-Session-Token" => session_token}, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: 10)
+            puts 'trying: '+ target_email
+            email_response = HTTParty.get('https://profiles.rapportive.com/contacts/email/' + target_email, :headers => { "X-Session-Token" => session_token}, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: timeout)
             
             if email_response.success?
               if email_response["contact"]["first_name"].length == 0 && email_response["contact"]["first_name"].length == 0
@@ -66,8 +75,6 @@ module Rapportive
       ensure
         return email_found
       end
-    
-    
     end
 
 
@@ -79,7 +86,7 @@ module Rapportive
 public
 
     def stripped_templates(first_name, last_name, middle_name)
-      templates = TEMPLATES
+      templates = Rapportive.options[:email_templates]
       templates = templates.select{|i| !(i.include?('mi') || i.include?('mn'))} if middle_name.empty?
       templates = templates.select{|i| !(i.include?('fi') || i.include?('fn'))} if first_name.empty?
       templates = templates.select{|i| !(i.include?('li') || i.include?('ln'))} if last_name.empty?
