@@ -32,6 +32,7 @@ module Rapportive
       proxy_addr = options[:proxy].split(':').first
       proxy_port = options[:proxy].split(':').last
       timeout = options[:timeout]
+      attempts = options[:attempts]
       response = execute_query(first_name, last_name, middle_name, domain, proxy_addr, proxy_port)
     end
 
@@ -39,21 +40,29 @@ module Rapportive
   private
     def execute_query(first_name, last_name, middle_name, domain, proxy_addr= nil, proxy_port= nil, timeout=20)
       timeout = Rapportive.options[:timeout]
+      tries = Rapportive.options[:tries]
 
       puts 'proxy in use:'+ proxy_addr+':'+proxy_port if (proxy_addr && proxy_port)
       
-      email_found = nil
-
+      
+      
       begin
+        email_found = nil
         login_response = HTTParty.get('https://rapportive.com/login_status?user_email=' + generate_email, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: timeout)
        
         if login_response.success?
           session_token = login_response["session_token"]
+
+          strip_templates = stripped_templates(first_name, last_name, middle_name)
           
-          for template_email in stripped_templates(first_name, last_name, middle_name)
+          for template_email in strip_templates
+            
+            puts 'template email lenght:'+ strip_templates.length.to_s
 
             target_email = template_email % { fn: first_name, ln: last_name, mn: middle_name, fi: first_name[0] || '', li: last_name[0] || '', mi: middle_name[0] || '' } + '@' + domain
             puts 'trying: '+ target_email
+
+            begin
             email_response = HTTParty.get('https://profiles.rapportive.com/contacts/email/' + target_email, :headers => { "X-Session-Token" => session_token}, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: timeout)
             
             if email_response.success?
@@ -66,15 +75,25 @@ module Rapportive
             else
               #raise Rapportive::HttpError, email_response.code
             end
+            rescue StandardError => e 
+              tries -= 1
+              if tries > 0
+                puts 'StandardError '+ e.message + ' retrying...' + ' remaining attempts: ' + tries.to_s
+                retry
+              end
+            end
           end
         else
           #raise Rapportive::HttpError, login_response.code
         end
       rescue StandardError => e 
-        puts 'StandardError '+ e.message
-      ensure
-        return email_found
+        tries -= 1
+        if tries > 0
+          puts 'StandardError '+ e.message + ' retrying...' + ' remaining attempts: ' + tries.to_s
+          retry
+        end
       end
+      email_found
     end
 
 

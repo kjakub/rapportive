@@ -8,10 +8,10 @@ module Rapportive
 
   def self.lookup(first_name, last_name, middle_name, domain, proxy= false)
 
-    first_name.strip!
-    last_name.strip!
-    middle_name.strip!
-    domain.strip!
+    first_name.delete(' ')
+    last_name.delete(' ')
+    middle_name.delete(' ')
+    domain.delete(' ')
 
     if options[:method] == :multi_proxy  
       RapportiveApi.new.query_multi_proxy(first_name, last_name, middle_name, domain, options)

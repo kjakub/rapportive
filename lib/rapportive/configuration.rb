@@ -10,7 +10,8 @@ module Rapportive
       :proxy,
       :proxy_list,
       :email_templates,
-      :timeout 
+      :timeout,
+      :tries
     ]
 
     attr_accessor *VALID_OPTIONS_KEYS
@@ -35,10 +36,11 @@ module Rapportive
     # Reset all configuration options to defaults
     def reset
       self.method = :multi_proxy
-      self.proxy = nil
+      self.proxy = "198.7.62.203:333"
       self.proxy_list = PROXIES_LIST.dup
       self.email_templates = EMAIL_TEMPLATES.dup
-      self.timeout = 20
+      self.timeout = 30
+      self.tries = 5
       self
     end
   end
