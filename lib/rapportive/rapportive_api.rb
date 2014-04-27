@@ -39,12 +39,15 @@ module Rapportive
 
   private
     def execute_query(first_name, last_name, middle_name, domain, proxy_addr= nil, proxy_port= nil, timeout=20)
+      first_name.delete!(" ")
+      last_name.delete!(" ")
+      middle_name.delete!(" ")
+      domain.delete!(" ")
+
       timeout = Rapportive.options[:timeout]
       tries = Rapportive.options[:tries]
 
       puts 'proxy in use:'+ proxy_addr+':'+proxy_port if (proxy_addr && proxy_port)
-      
-      
       
       begin
         email_found = nil
