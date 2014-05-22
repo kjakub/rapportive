@@ -50,7 +50,7 @@ module Rapportive
       puts 'proxy in use:'+ proxy_addr+':'+proxy_port if (proxy_addr && proxy_port)
       
       begin
-        email_found = nil
+        email_found = "Nothing found"
         login_response = HTTParty.get('https://rapportive.com/login_status?user_email=' + generate_email, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: timeout)
        
         if login_response.success?
@@ -66,18 +66,19 @@ module Rapportive
             puts 'trying: '+ target_email
 
             begin
-            email_response = HTTParty.get('https://profiles.rapportive.com/contacts/email/' + target_email, :headers => { "X-Session-Token" => session_token}, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: timeout)
+
+              email_response = HTTParty.get('https://profiles.rapportive.com/contacts/email/' + target_email, :headers => { "X-Session-Token" => session_token}, http_proxyaddr: proxy_addr, http_proxyport: proxy_port, timeout: timeout)
             
-            if email_response.success?
-              if email_response["contact"]["first_name"].length == 0 && email_response["contact"]["first_name"].length == 0
-                email_found = "Nothing found"
+              if email_response.success?
+                if email_response["contact"]["first_name"].length == 0 && email_response["contact"]["first_name"].length == 0
+                  email_found = "Nothing found"
+                else
+                  email_found = target_email
+                  break
+                end
               else
-                email_found = target_email
-                break
+                #raise Rapportive::HttpError, email_response.code
               end
-            else
-              #raise Rapportive::HttpError, email_response.code
-            end
             rescue StandardError => e 
               tries -= 1
               if tries > 0
