@@ -35,7 +35,7 @@ module Rapportive
 
     # Reset all configuration options to defaults
     def reset
-      self.method = :multi_proxy
+      self.method = :single_proxy
       self.proxy = "198.7.62.203:333"
       self.proxy_list = PROXIES_LIST.dup
       self.email_templates = EMAIL_TEMPLATES.dup

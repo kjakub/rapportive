@@ -302,3 +302,29 @@ PROXIES_LIST = [
           "118.97.137.50:8080",
           "118.175.5.9:8080",
 ];
+
+
+SITES = %w( 
+ facebook.com 
+ youtube.com
+ yahoo.com
+ baidu.com
+ wikipedia.org
+ qq.com
+ live.com
+ taobao.com
+ linkedin.com
+ sina.com.cn
+ twitter.com
+ amazon.com
+ hao123.com
+ google.co.in
+ blogspot.com
+ weibo.com
+ 163.com
+ wordpress.com
+ yahoo.co.jp
+ bing.com
+ tmall.com
+ 360.cn
+)
