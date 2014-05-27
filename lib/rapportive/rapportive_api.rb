@@ -141,8 +141,8 @@ module Rapportive
 
         end
 
-        puts 'ended'
-        puts email_found
+        puts 'ended '+email_found
+      email_found
 
     end
 
