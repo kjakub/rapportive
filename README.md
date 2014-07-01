@@ -35,6 +35,10 @@ Or install it yourself as:
 
       //set timeout deafult is 20
       config.timeout = 10
+
+      //set full body response as hash or just email a string (if found) false default
+
+      config.full_body = false
     end
 
     2. query

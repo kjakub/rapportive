@@ -34,6 +34,11 @@ module Rapportive
       timeout = options[:timeout]
       attempts = options[:attempts]
       response = execute_query(first_name, last_name, middle_name, domain, proxy_addr, proxy_port)
+      if options[:full_body]
+        return response 
+      else
+        return response.parsed_response['contact']['email']
+      end
     end
 
 
@@ -73,7 +78,7 @@ module Rapportive
                 if email_response["contact"]["first_name"].length == 0 && email_response["contact"]["first_name"].length == 0
                   email_found = "Nothing found"
                 else
-                  email_found = target_email
+                  email_found = email_response
                   break
                 end
               else
