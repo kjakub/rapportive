@@ -35,7 +35,7 @@ module Rapportive
       attempts = options[:attempts]
       response = execute_query(first_name, last_name, middle_name, domain, proxy_addr, proxy_port)
       if options[:full_body]
-        return response 
+        return response.parsed_response 
       else
         return response.parsed_response['contact']['email']
       end
