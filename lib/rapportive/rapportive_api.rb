@@ -35,7 +35,7 @@ module Rapportive
       attempts = options[:attempts]
       response = execute_query(first_name, last_name, middle_name, domain, proxy_addr, proxy_port)
 
-      return response if response.is_a?(String)
+      return {'contact' => {'email' => "Nothing found" }} if response == "Nothing found"
 
       if options[:full_body]
         return response.parsed_response 
