@@ -34,11 +34,15 @@ module Rapportive
       timeout = options[:timeout]
       attempts = options[:attempts]
       response = execute_query(first_name, last_name, middle_name, domain, proxy_addr, proxy_port)
+
+      return response if response == "Nothing found"
+
       if options[:full_body]
         return response.parsed_response 
       else
         return response.parsed_response['contact']['email']
       end
+
     end
 
 
