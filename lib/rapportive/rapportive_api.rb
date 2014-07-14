@@ -36,6 +36,7 @@ module Rapportive
       response = execute_query(first_name, last_name, middle_name, domain, proxy_addr, proxy_port)
 
       return {'contact' => {'email' => "Nothing found" }} if response == "Nothing found"
+      return {'contact' => {'email' => "Proxy Authentication error" }} if response == "Proxy error"
 
       if options[:full_body]
         return response.parsed_response 
@@ -88,22 +89,30 @@ module Rapportive
               else
                 #raise Rapportive::HttpError, email_response.code
               end
-            rescue StandardError => e 
-              tries -= 1
-              if tries > 0
-                puts 'StandardError '+ e.message + ' retrying...' + ' remaining attempts: ' + tries.to_s
-                retry
+            rescue StandardError => e
+              if e.response.is_a?(Net::HTTPProxyAuthenticationRequired)
+                email_found = "Proxy error"
+              else 
+                tries -= 1
+                if tries > 0
+                  puts 'StandardError '+ e.message + ' retrying...' + ' remaining attempts: ' + tries.to_s
+                  retry
+                end
               end
             end
           end
         else
           #raise Rapportive::HttpError, login_response.code
         end
-      rescue StandardError => e 
+      rescue StandardError => e
+        if e.response.is_a?(Net::HTTPProxyAuthenticationRequired)
+          email_found = "Proxy error"
+        else
         tries -= 1
-        if tries > 0
-          puts 'StandardError '+ e.message + ' retrying...' + ' remaining attempts: ' + tries.to_s
-          retry
+          if tries > 0
+            puts 'StandardError '+ e.message + ' retrying...' + ' remaining attempts: ' + tries.to_s
+            retry
+          end
         end
       end
       email_found
