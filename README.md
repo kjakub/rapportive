@@ -1,4 +1,4 @@
-# Rapportive
+# Rapportive - Obsolete and not functional since Rapportive API change
 
 [![Build Status](https://travis-ci.org/kjakub/rapportive.png?branch=master)](https://travis-ci.org/kjakub/rapportive)
 
