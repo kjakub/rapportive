@@ -19,7 +19,7 @@ Or install it yourself as:
 ## Usage
 
     1. set it up
-
+    ```ruby
     Rapportive.configure do |config|
       //choose one of those method
       config.method = :single_proxy OR :multi_proxy OR :no_proxy
@@ -40,12 +40,13 @@ Or install it yourself as:
 
       config.full_body = false
     end
+    ```
 
     2. query
-
+    ```ruby
     first name, last name, middle name - at least one is required
 
-      Rapportive.lookup('first_name','last_name', 'middle_name', 'gmail.com')
+      Rapportive.lookup('first_name','last_name', 'middle_name', 'gmail.com')```
 
 ## Contributing
 
